@@ -1,3 +1,10 @@
+## [1.16.1](https://github.com/temich/svintl/compare/v1.16.0...v1.16.1) (2026-07-06)
+
+
+### Bug Fixes
+
+* **build:** quote non-identifier keys in generated types.ts ([27bbd90](https://github.com/temich/svintl/commit/27bbd90de0c570b570dbde862d2161a05045a39d))
+
 # [1.16.0](https://github.com/temich/svintl/compare/v1.15.0...v1.16.0) (2026-06-14)
 
 
