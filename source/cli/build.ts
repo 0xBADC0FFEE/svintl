@@ -54,6 +54,14 @@ export type Dictionary = ${dictionaryType}
 `
 }
 
+/** Matches keys that can be emitted bare (valid JS identifiers). */
+const IDENTIFIER = /^[A-Za-z_$][A-Za-z0-9_$]*$/
+
+/** Quote a dictionary key unless it is a valid JS identifier. */
+function keyLabel(key: string): string {
+  return IDENTIFIER.test(key) ? key : JSON.stringify(key)
+}
+
 /**
  * Recursively generate TypeScript type definition for dictionary structure
  */
@@ -96,7 +104,7 @@ function generateDictionaryType(obj: any, indent = 0): string {
     else
       type = 'unknown'
 
-    return `${nextSpaces}${key}: ${type}`
+    return `${nextSpaces}${keyLabel(key)}: ${type}`
   })
 
   return `{\n${entries.join('\n')}\n${spaces}}`

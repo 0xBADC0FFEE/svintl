@@ -130,3 +130,29 @@ Feature: Build
       """
       formatSingle: (value: any) => string
       """
+
+  Scenario: Build quotes non-identifier keys in types.ts
+    When I run `npx intl hola -p ./test-keys`
+    And I modify `test-keys/en-US.yaml` to add:
+      """
+      hello: Hello
+      "0000000": Zero
+      "3a9c21f": Mixed
+      """
+    And I run `npx intl build -p ./test-keys`
+    Then the file `test-keys/types.ts` contains:
+      """
+      "0000000": string
+      """
+    And the file `test-keys/types.ts` contains:
+      """
+      "3a9c21f": string
+      """
+    And the file `test-keys/types.ts` contains:
+      """
+      hello: string
+      """
+    And the file `test-keys/built.js` contains:
+      """
+      "0000000": "Zero"
+      """
