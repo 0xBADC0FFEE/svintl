@@ -10,23 +10,22 @@ CLI tool for managing internationalization dictionaries with automatic translati
 
 ## Core Rule
 
-**NEVER edit intl files directly** — all `*.yaml`, `built.js`, `types.ts` in intl directories are generated. Always use `npx intl` CLI commands.
+The `*.yaml`, `built.js`, and `types.ts` files in intl directories are generated — they're edited through the `npx intl` CLI, not by hand.
 
 ## CLI Commands
 
 ```bash
 npx intl hola                               # init dictionaries (default: src/lib/intl/)
 npx intl hola -p ./custom/path              # init at custom path
-npx intl add key.path "Value" "context"     # add new key (errors if exists), context optional
-npx intl add key.path "Value" --debug        # optional: print OpenAI request before API call
-npx intl set key.path "Updated value"       # update existing key
-npx intl set key.path "Value" --debug       # same (--debug on add/set)
-npx intl set "mount/key.path" "Value"       # set in mount
+npx intl add key.path "Value" "context"     # add a new key — fails if it already exists; context optional
+npx intl set key.path "Updated value"       # update a key that already exists — fails if missing
+npx intl set "mount/key.path" "Value"       # target a mount with the mount/ prefix
+npx intl add key.path "Value" --debug       # --debug (add or set): print the OpenAI request first
 npx intl const key.path "Same everywhere"   # same value across all locales (no translation)
 npx intl unit items.count "item"            # pluralized entry (auto-generates plural forms)
 npx intl move old.key new.key               # rename key/branch
 npx intl del key.path                       # delete key/branch
-npx intl create es                          # new locale (BCP 47 tag, auto-translates)
+npx intl create es                          # add a locale (BCP 47 tag) — auto-translates the whole dictionary into it
 npx intl destroy es                         # delete locale
 npx intl mount foo ./any/path               # create empty mount
 npx intl import foo ./any/path              # adopt existing dict dir as mount, reconcile locales
@@ -35,8 +34,8 @@ npx intl context "Project description"      # set project-wide translation guida
 npx intl context --clear                    # clear project context
 npx intl genders he she none                # enable gender-aware translations (list the gender values)
 npx intl genders                            # print current gender values
-npx intl sync en                            # re-translate all from source (EXPENSIVE — avoid)
-npx intl sync en key.path                   # re-translate specific key
+npx intl sync en key.path                   # reconcile: re-translate one key into all locales from source en
+npx intl sync en                            # reconcile: re-translate the whole dictionary from source en
 npx intl build                              # rebuild JS/TS from YAML
 ```
 
@@ -147,13 +146,13 @@ Context is stored in `context.yaml` and used by OpenAI when creating new locales
 
 ## Workflow
 
-1. Use `npx intl set/unit/const` to add/update translations
+1. Use `npx intl add/set/unit/const` to add/update translations
 2. Run `npx intl build` to generate JS/TS (often auto-runs)
 3. Import `dict` store in components
 4. Use `$dict.key.path` in templates
 
 ## Avoid
 
-- **Direct YAML editing** — always use CLI
-- **`npx intl sync`** — expensive API calls, rarely needed
-- **Non-BCP47 locale codes** — must be valid tags like `en-US`, `es`, `pt-BR`
+- **Editing YAML by hand** — go through the CLI
+- **`npx intl sync` for routine edits** — it's only for reconciling after a manual source edit; use `add`/`set` instead
+- **Non-BCP47 locale codes** — use valid tags like `en-US`, `es`, `pt-BR`
