@@ -14,7 +14,7 @@ npm i svintl -D
 
 ```bash
 npx intl hola # initialize dictionaries in default location
-npx intl set example.hello "Hello world" # set a translation
+npx intl add example.hello "Hello world" # add a translation
 npx intl create es # create a new locale dictionary
 npx intl build # generate JavaScript dictionaries
 ```
