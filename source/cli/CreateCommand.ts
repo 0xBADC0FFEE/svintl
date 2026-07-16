@@ -6,6 +6,7 @@ import { TranslationService } from './TranslationService'
 import { logger } from './logger'
 import { validateLanguageTag, getNativeLanguageName, getTextDirection } from './bcp47'
 import { parsePartitionedKey } from './partition'
+import { writeYaml } from './yaml'
 
 export class CreateCommand {
   private translationService = new TranslationService()
@@ -49,13 +50,7 @@ export class CreateCommand {
         dir,
       }
 
-      const yamlContent = yaml.dump(initialContent, {
-        lineWidth: -1,
-        quotingType: '"',
-        forceQuotes: false,
-      })
-
-      fs.writeFileSync(targetFile, yamlContent)
+      writeYaml(targetFile, initialContent)
 
       require('./build').build(i18nPath)
       logger.log(`✅ Created ${targetFile} with native name: ${nativeName}`)
@@ -121,13 +116,7 @@ export class CreateCommand {
         dir,
       }
 
-      const yamlContent = yaml.dump(initialContent, {
-        lineWidth: -1,
-        quotingType: '"',
-        forceQuotes: false,
-      })
-
-      fs.writeFileSync(targetFile, yamlContent)
+      writeYaml(targetFile, initialContent)
       require('./build').build(i18nPath)
       logger.log(`✅ Created ${targetFile} with native name: ${nativeName}`)
       return
@@ -180,13 +169,7 @@ export class CreateCommand {
       }
     }
 
-    const yamlContent = yaml.dump(translatedData, {
-      lineWidth: -1,
-      quotingType: '"',
-      forceQuotes: false,
-    })
-
-    fs.writeFileSync(targetFile, yamlContent)
+    writeYaml(targetFile, translatedData)
     logger.log(`✅ Created ${targetFile} from ${sourceLanguage} with ${entries.length} entries`)
 
     // Create files in all mounted partitions as well
@@ -218,12 +201,7 @@ export class CreateCommand {
           locale: targetLang,
           dir,
         }
-        const minimalYamlContent = yaml.dump(minimalContent, {
-          lineWidth: -1,
-          quotingType: '"',
-          forceQuotes: false,
-        })
-        fs.writeFileSync(partitionTargetFile, minimalYamlContent)
+        writeYaml(partitionTargetFile, minimalContent)
         logger.log(`✅ Created minimal ${partitionTargetFile} in partition "${mountName}"`)
       } else {
         // Translate content for partition - use the same source data but check if partition has specific entries
@@ -285,13 +263,7 @@ export class CreateCommand {
             }
           }
 
-          const partitionYamlContent = yaml.dump(partitionTranslatedData, {
-            lineWidth: -1,
-            quotingType: '"',
-            forceQuotes: false,
-          })
-
-          fs.writeFileSync(partitionTargetFile, partitionYamlContent)
+          writeYaml(partitionTargetFile, partitionTranslatedData)
           logger.log(`✅ Created ${partitionTargetFile} in partition "${mountName}"`)
         } else {
           // Partition doesn't have source file, create minimal file
@@ -300,12 +272,7 @@ export class CreateCommand {
             locale: targetLang,
             dir,
           }
-          const minimalYamlContent = yaml.dump(minimalContent, {
-            lineWidth: -1,
-            quotingType: '"',
-            forceQuotes: false,
-          })
-          fs.writeFileSync(partitionTargetFile, minimalYamlContent)
+          writeYaml(partitionTargetFile, minimalContent)
           logger.log(`✅ Created minimal ${partitionTargetFile} in partition "${mountName}"`)
         }
       }

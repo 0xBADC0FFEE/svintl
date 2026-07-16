@@ -5,9 +5,10 @@
  * @author copilot
  */
 
-import { readFileSync, writeFileSync, existsSync } from 'fs'
+import { readFileSync, existsSync } from 'fs'
 import { join, resolve } from 'path'
-import { load as yamlLoad, dump as yamlDump } from 'js-yaml'
+import { load as yamlLoad } from 'js-yaml'
+import { writeYaml } from './yaml'
 
 export interface ContextEntry {
   input: string
@@ -78,13 +79,7 @@ export class ContextFileManager {
         ...(data.mounts && Object.keys(data.mounts).length > 0 ? { mounts: data.mounts } : {}),
       }
 
-      const yamlContent = yamlDump(normalizedData, {
-        lineWidth: -1,
-        quotingType: '"',
-        forceQuotes: false,
-      })
-
-      writeFileSync(contextFilePath, yamlContent)
+      writeYaml(contextFilePath, normalizedData)
     } catch (error) {
       throw new Error(`Failed to write context file: ${error}`)
     }

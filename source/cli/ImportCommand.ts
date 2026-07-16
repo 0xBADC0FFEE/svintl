@@ -8,7 +8,7 @@
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
 import { join, relative, resolve } from 'path'
-import { dump as yamlDump } from 'js-yaml'
+import { writeYaml } from './yaml'
 import { build } from './build'
 import { ContextFileManager } from './context'
 import { CreateCommand } from './CreateCommand'
@@ -81,9 +81,7 @@ export class ImportCommand {
 
       for (const locale of missing) {
         const data = await this.createCommand.translateEntries(entries, locale, projectContext, i18nPath)
-        const yamlContent = yamlDump(data, { lineWidth: -1, quotingType: '"', forceQuotes: false })
-
-        writeFileSync(join(absImportPath, `${locale}.yaml`), yamlContent)
+        writeYaml(join(absImportPath, `${locale}.yaml`), data)
       }
     }
 
