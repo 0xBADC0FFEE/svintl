@@ -1,3 +1,10 @@
+## [1.16.2](https://github.com/temich/svintl/compare/v1.16.1...v1.16.2) (2026-07-16)
+
+
+### Bug Fixes
+
+* **cli:** unify yaml formatting across commands ([f9b3bc1](https://github.com/temich/svintl/commit/f9b3bc1de8afcf332eabdb1caade9381f2682b6f))
+
 ## [1.16.1](https://github.com/temich/svintl/compare/v1.16.0...v1.16.1) (2026-07-06)
 
 
