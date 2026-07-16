@@ -6,6 +6,7 @@ import { TranslationService } from './TranslationService'
 import { logger } from './logger'
 import { validateLanguageTag, getNativeLanguageName, getTextDirection } from './bcp47'
 import { parsePartitionedKey, getPartitionPath } from './partition'
+import { writeYaml } from './yaml'
 
 interface SyncEntry {
   key: string
@@ -153,13 +154,7 @@ export class SyncCommand {
           this.translationService.setNestedValue(translatedData, entry.key, entry.value)
         }
 
-        const yamlContent = yaml.dump(translatedData, {
-          lineWidth: -1,
-          quotingType: '"',
-          forceQuotes: false,
-        })
-
-        fs.writeFileSync(targetFile, yamlContent)
+        writeYaml(targetFile, translatedData)
       }
       logger.log('✅ Synced without translation')
       return
@@ -218,13 +213,7 @@ export class SyncCommand {
         }
       }
 
-      const yamlContent = yaml.dump(translatedData, {
-        lineWidth: -1,
-        quotingType: '"',
-        forceQuotes: false,
-      })
-
-      fs.writeFileSync(targetFile, yamlContent)
+      writeYaml(targetFile, translatedData)
       logger.log(`✅ Synced ${targetLang} with ${sourceEntries.length} entries`)
     }
 
@@ -351,13 +340,7 @@ export class SyncCommand {
           }
         }
 
-        const partitionYamlContent = yaml.dump(partitionTranslatedData, {
-          lineWidth: -1,
-          quotingType: '"',
-          forceQuotes: false,
-        })
-
-        fs.writeFileSync(partitionTargetFile, partitionYamlContent)
+        writeYaml(partitionTargetFile, partitionTranslatedData)
         logger.log(`✅ Synced ${partitionTargetFile} in partition "${mountName}"`)
       }
     }

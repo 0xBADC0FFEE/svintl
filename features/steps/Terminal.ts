@@ -6,6 +6,7 @@ import { dirname, join } from 'path'
 import { When, Then, Given, Before, After } from '@cucumber/cucumber'
 import dotenv from 'dotenv'
 import * as YAML from 'js-yaml'
+import { stringify } from '../../source/cli/yaml'
 
 dotenv.config()
 
@@ -114,7 +115,7 @@ When(/I modify `([^`]+)` to update `([^`]+)` to `([^`]+)`/, function(file: strin
 
   data[key] = value
 
-  const updatedContent = YAML.dump(data)
+  const updatedContent = stringify(data)
 
   writeFileSync(path, updatedContent)
 })
@@ -174,7 +175,7 @@ When(/I modify `([^`]+)` to add:/, function(file: string, yamlContent: string) {
   // Merge the new data into existing data
   Object.assign(data, newData)
 
-  const updatedContent = YAML.dump(data)
+  const updatedContent = stringify(data)
 
   writeFileSync(path, updatedContent)
 })

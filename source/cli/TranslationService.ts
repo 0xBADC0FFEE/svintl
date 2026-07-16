@@ -5,9 +5,10 @@
  * @author copilot
  */
 
-import { readFileSync, writeFileSync, readdirSync } from 'fs'
+import { readFileSync, readdirSync } from 'fs'
 import { join, resolve } from 'path'
-import { load as yamlLoad, dump as yamlDump } from 'js-yaml'
+import { load as yamlLoad } from 'js-yaml'
+import { writeYaml } from './yaml'
 import OpenAI from 'openai'
 import { build } from './build'
 import { ContextFileManager } from './context'
@@ -387,11 +388,7 @@ Return ONLY a JSON array of translations in the same order as the items above.`
     current[finalKey] = value
 
     // Write back to file in YAML format
-    writeFileSync(filePath, yamlDump(yamlData, {
-      indent: 2,
-      quotingType: '"',
-      forceQuotes: false,
-    }))
+    writeYaml(filePath, yamlData)
   }
 
   /**
@@ -449,11 +446,7 @@ Return ONLY a JSON array of translations in the same order as the items above.`
     const finalKey = keyParts[keyParts.length - 1]
     if (finalKey in current) {
       delete current[finalKey]
-      writeFileSync(filePath, yamlDump(yamlData, {
-        lineWidth: -1,
-        quotingType: '"',
-        forceQuotes: false,
-      }))
+      writeYaml(filePath, yamlData)
       return true
     }
     return false
